@@ -4,12 +4,19 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class WatermarkApp {
 
     private TrayIcon trayIcon;
+    private Properties config;
 
     public WatermarkApp() {
+        loadConfig();
         if (!SystemTray.isSupported()) {
             System.out.println("System tray is not supported!");
             return;
@@ -18,11 +25,28 @@ public class WatermarkApp {
         createAndShowGUI();
     }
 
+    private void loadConfig() {
+        config = new Properties();
+        try {
+            config.load(new FileInputStream("marca.cfg"));
+        } catch (IOException e) {
+            System.err.println("Unable to load config file.");
+            e.printStackTrace();
+        }
+    }
+
     private void setUpTrayIcon() {
         SystemTray tray = SystemTray.getSystemTray();
         ImageIcon icon = new ImageIcon("path_to_your_icon.png"); // Coloque o caminho para o ícone aqui
         PopupMenu popup = new PopupMenu();
-        // Nenhum item de menu é adicionado para fechar o aplicativo
+        MenuItem exitItem = new MenuItem("Exit");
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        popup.add(exitItem);
         trayIcon = new TrayIcon(icon.getImage(), "Watermark App", popup);
         trayIcon.setImageAutoSize(true);
         try {
@@ -44,7 +68,7 @@ public class WatermarkApp {
         frame.setType(Window.Type.UTILITY); // Impede que apareça na barra de tarefas
 
         String username = System.getProperty("user.name");
-        frame.add(new WatermarkPanel(username));
+        frame.add(new WatermarkPanel(username, config));
 
         frame.setVisible(true);
         makeWindowTransparent(frame);
@@ -59,11 +83,27 @@ public class WatermarkApp {
 
     private static class WatermarkPanel extends JPanel {
         String username;
+        Font font;
+        Color color;
 
-        public WatermarkPanel(String username) {
+        public WatermarkPanel(String username, Properties config) {
             this.username = username;
             setOpaque(false);
             setLayout(new BorderLayout());
+            initConfig(config);
+        }
+
+        private void initConfig(Properties config) {
+            String fontName = config.getProperty("font.name", "Arial");
+            int fontStyle = config.getProperty("font.style", "Bold").equalsIgnoreCase("Bold") ? Font.BOLD : Font.PLAIN;
+            int fontSize = Integer.parseInt(config.getProperty("font.size", "40"));
+            int red = Integer.parseInt(config.getProperty("color.red", "192"));
+            int green = Integer.parseInt(config.getProperty("color.green", "192"));
+            int blue = Integer.parseInt(config.getProperty("color.blue", "192"));
+            int alpha = Integer.parseInt(config.getProperty("color.alpha", "100"));
+
+            font = new Font(fontName, fontStyle, fontSize);
+            color = new Color(red, green, blue, alpha);
         }
 
         @Override
@@ -71,8 +111,8 @@ public class WatermarkApp {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setFont(new Font("Arial", Font.BOLD, 40));
-            g2d.setColor(new Color(192, 192, 192, 100));
+            g2d.setFont(font);
+            g2d.setColor(color);
 
             FontMetrics fm = g2d.getFontMetrics();
             int x = 50;
