@@ -1,4 +1,4 @@
-```
+
 # Watermark App
 
 ## Descrição
@@ -15,7 +15,7 @@ Watermark App é uma aplicação Java que adiciona uma marca d'água com o nome 
 - Java Native Access (JNA) library.
 
 ## Configuração
-As configurações de aparência da marca d'água podem ser modificadas no arquivo `marca.cfg` que deve estar localizado na mesma pasta do executável do projeto. As seguintes propriedades podem ser configuradas:
+As configurações de aparência da marca d'água podem ser modificadas no arquivo 'marca.cfg' que deve estar localizado na mesma pasta do executável do projeto. As seguintes propriedades podem ser configuradas:
 
 - `fonte`: Nome da fonte (ex: Arial).
 - `tamanhoFonte`: Tamanho da fonte (ex: 40).
@@ -27,19 +27,19 @@ As configurações de aparência da marca d'água podem ser modificadas no arqui
 ## Executando o Projeto
 1. Compile o código usando seu ambiente de desenvolvimento Java ou uma linha de comando. Por exemplo:
    ```
-javac WatermarkApp.java
+   javac WatermarkApp.java
    ```
 2. Execute o aplicativo:
    ```
-java WatermarkApp
+   java WatermarkApp
    ```
 
 ## Contribuições
 Contribuições são bem-vindas! Para contribuir, por favor, envie um pull request através do GitHub.
 
 ## Licença
-Este projeto é distribuído sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto é distribuído sob a licença MIT. Veja o arquivo 'LICENSE' para mais detalhes.
 
 ## Autor
 Rodrigo Prestes Menezes
-```
+
