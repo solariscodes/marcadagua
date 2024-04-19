@@ -2,10 +2,9 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -37,16 +36,16 @@ public class WatermarkApp {
 
     private void setUpTrayIcon() {
         SystemTray tray = SystemTray.getSystemTray();
-        ImageIcon icon = new ImageIcon("path_to_your_icon.png"); // Coloque o caminho para o ícone aqui
+        ImageIcon icon = new ImageIcon("ico.png"); // Coloque o caminho para o ícone aqui
         PopupMenu popup = new PopupMenu();
-        MenuItem exitItem = new MenuItem("Exit");
+/*        MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
-        });
-        popup.add(exitItem);
+        });*/
+        //popup.add(exitItem);
         trayIcon = new TrayIcon(icon.getImage(), "Watermark App", popup);
         trayIcon.setImageAutoSize(true);
         try {
