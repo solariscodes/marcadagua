@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="github.kunkun26.jna.platform" type="repository">
+    <properties maven-id="com.github.kunkun26:jna-platform:4.5.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/kunkun26/jna-platform/4.5.1/jna-platform-4.5.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/kunkun26/jna/4.5.1/jna-4.5.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
