@@ -2,7 +2,6 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
@@ -38,14 +37,6 @@ public class WatermarkApp {
         SystemTray tray = SystemTray.getSystemTray();
         ImageIcon icon = new ImageIcon("ico.png"); // Coloque o caminho para o ícone aqui
         PopupMenu popup = new PopupMenu();
-/*        MenuItem exitItem = new MenuItem("Exit");
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });*/
-        //popup.add(exitItem);
         trayIcon = new TrayIcon(icon.getImage(), "Watermark App", popup);
         trayIcon.setImageAutoSize(true);
         try {
@@ -64,7 +55,7 @@ public class WatermarkApp {
         frame.setUndecorated(true);
         frame.setBackground(new Color(0, 0, 0, 1));
         frame.setAlwaysOnTop(true);
-        frame.setType(Window.Type.UTILITY); // Impede que apareça na barra de tarefas
+        frame.setType(Window.Type.UTILITY);
 
         String username = System.getProperty("user.name");
         frame.add(new WatermarkPanel(username, config));
@@ -96,15 +87,18 @@ public class WatermarkApp {
             String fontName = config.getProperty("font.name", "Arial");
             int fontStyle = config.getProperty("font.style", "Bold").equalsIgnoreCase("Bold") ? Font.BOLD : Font.PLAIN;
             int fontSize = Integer.parseInt(config.getProperty("font.size", "40"));
-            int red = Integer.parseInt(config.getProperty("color.red", "192"));
-            int green = Integer.parseInt(config.getProperty("color.green", "192"));
-            int blue = Integer.parseInt(config.getProperty("color.blue", "192"));
-            int alpha = Integer.parseInt(config.getProperty("color.alpha", "100"));
+
+            int red = Integer.parseInt(config.getProperty("color.red", "255"));  // Padrão é 255
+            int green = Integer.parseInt(config.getProperty("color.green", "255"));  // Padrão é 255
+            int blue = Integer.parseInt(config.getProperty("color.blue", "255"));  // Padrão é 255
+            int alpha = Integer.parseInt(config.getProperty("color.alpha", "100"));  // Padrão é 100
+
+            // Converte alpha para o intervalo de 0 a 255
+            int alphaScaled = (int) (alpha / 100.0 * 255);
 
             font = new Font(fontName, fontStyle, fontSize);
-            color = new Color(red, green, blue, alpha);
+            color = new Color(red, green, blue, alphaScaled); // Aplica a transparência corretamente
         }
-
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
