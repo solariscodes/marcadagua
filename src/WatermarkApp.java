@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 public class WatermarkApp {
@@ -64,16 +66,29 @@ public class WatermarkApp {
         if (addressValue != null && addressValue.equals("1")) {
             try {
                 InetAddress ip = InetAddress.getLocalHost();
-                username += " | " + ip.getHostAddress() + " |";
+                username += " " + ip.getHostAddress(); // Adicionar o endereço IP sem pipe
             } catch (UnknownHostException e) {
                 System.err.println("Error getting IP address.");
             }
+        }
+
+        String showTimeValue = config.getProperty("data"); // Obter o valor da configuração para mostrar a hora
+        if (showTimeValue != null && showTimeValue.equals("1")) { // Verificar se deve mostrar a hora
+            String currentTime = getCurrentTime(); // Obter a hora atual no formato "HH:MM"
+            username += " " + currentTime; // Adicionar a hora ao nome de usuário
         }
 
         frame.add(new WatermarkPanel(username, config));
 
         frame.setVisible(true);
         makeWindowTransparent(frame);
+    }
+
+    private String getCurrentTime() {
+        // Obter a hora atual no formato "HH:MM"
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Date now = new Date();
+        return sdf.format(now);
     }
 
     private void makeWindowTransparent(JFrame frame) {
