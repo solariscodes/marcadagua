@@ -10,7 +10,8 @@ public class ConfigPanel extends JFrame {
     private Properties config;
     private JComboBox<String> fontNameBox, fontSizeBox, fontStyleBox;
     private JComboBox<Color> colorBox;
-    private JCheckBox showIPCheckBox; // Alteração para usar uma checkbox
+    private JCheckBox showIPCheckBox;
+    private JCheckBox showTimeCheckBox;
     private JButton saveButton, closeButton;
     private JPanel fontPanel, controlPanel;
     private Color[] commonColors = {
@@ -27,11 +28,15 @@ public class ConfigPanel extends JFrame {
     private void initializeUI() {
         setTitle("Configurações da Marca d'Água");
         setLayout(new BorderLayout());
-        setSize(450, 400);
+        setSize(450, 250); // Setting height to 250 pixels
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        fontPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        // Definindo o ícone da janela
+        ImageIcon icon = new ImageIcon("ico.png");
+        setIconImage(icon.getImage());
+
+        fontPanel = new JPanel(new GridLayout(7, 2, 10, 10)); // Adjusted grid layout
         fontPanel.setBorder(BorderFactory.createTitledBorder("Font Settings"));
         String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         fontNameBox = new JComboBox<>(fontNames);
@@ -52,10 +57,13 @@ public class ConfigPanel extends JFrame {
         fontPanel.add(new JLabel("Color:"));
         fontPanel.add(colorBox);
 
-        showIPCheckBox = new JCheckBox("Mostrar IP"); // Alteração para usar uma checkbox
-        fontPanel.add(showIPCheckBox); // Adicionando a checkbox ao painel de configuração
+        showIPCheckBox = new JCheckBox("Mostrar IP");
+        fontPanel.add(showIPCheckBox);
 
-        controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        showTimeCheckBox = new JCheckBox("Mostrar Hora");
+        fontPanel.add(showTimeCheckBox);
+
+        controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Center aligning control panel
         saveButton = new JButton("Save");
         saveButton.addActionListener(this::saveConfig);
         closeButton = new JButton("Close");
@@ -64,7 +72,7 @@ public class ConfigPanel extends JFrame {
         controlPanel.add(closeButton);
 
         add(fontPanel, BorderLayout.NORTH);
-        add(controlPanel, BorderLayout.SOUTH);
+        add(controlPanel, BorderLayout.CENTER); // Adding control panel to center
 
         setVisible(true);
     }
@@ -90,7 +98,10 @@ public class ConfigPanel extends JFrame {
         colorBox.setSelectedItem(selectedColor);
 
         String showIP = config.getProperty("address", "1");
-        showIPCheckBox.setSelected(showIP.equals("1")); // Atualizando a checkbox de acordo com o valor do arquivo de configuração
+        showIPCheckBox.setSelected(showIP.equals("1"));
+
+        String showTime = config.getProperty("data", "0");
+        showTimeCheckBox.setSelected(showTime.equals("1"));
     }
 
     private void saveConfig(ActionEvent event) {
@@ -102,8 +113,11 @@ public class ConfigPanel extends JFrame {
         config.setProperty("color.green", String.valueOf(selectedColor.getGreen()));
         config.setProperty("color.blue", String.valueOf(selectedColor.getBlue()));
 
-        String showIP = showIPCheckBox.isSelected() ? "1" : "0"; // Obtendo o valor da checkbox
+        String showIP = showIPCheckBox.isSelected() ? "1" : "0";
         config.setProperty("address", showIP);
+
+        String showTime = showTimeCheckBox.isSelected() ? "1" : "0";
+        config.setProperty("data", showTime);
 
         try (FileOutputStream out = new FileOutputStream("marca.cfg")) {
             config.store(out, "Watermark Configuration");
@@ -128,7 +142,7 @@ public class ConfigPanel extends JFrame {
         public Component getListCellRendererComponent(JList<? extends Color> list, Color value, int index, boolean isSelected, boolean cellHasFocus) {
             color = value;
             label.setBackground(color);
-            label.setText(" ");  // Adicionar texto mesmo que seja um espaço para garantir a renderização
+            label.setText(" ");
             if (isSelected) {
                 setBorder(BorderFactory.createLineBorder(Color.white, 2));
             } else {
