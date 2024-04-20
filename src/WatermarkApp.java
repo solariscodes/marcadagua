@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class WatermarkApp {
@@ -58,6 +60,16 @@ public class WatermarkApp {
         frame.setType(Window.Type.UTILITY);
 
         String username = System.getProperty("user.name");
+        String addressValue = config.getProperty("address");
+        if (addressValue != null && addressValue.equals("1")) {
+            try {
+                InetAddress ip = InetAddress.getLocalHost();
+                username += " | " + ip.getHostAddress() + " |";
+            } catch (UnknownHostException e) {
+                System.err.println("Error getting IP address.");
+            }
+        }
+
         frame.add(new WatermarkPanel(username, config));
 
         frame.setVisible(true);
@@ -99,6 +111,7 @@ public class WatermarkApp {
             font = new Font(fontName, fontStyle, fontSize);
             color = new Color(red, green, blue, alphaScaled); // Aplica a transparência corretamente
         }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -122,10 +135,6 @@ public class WatermarkApp {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new WatermarkApp();
-            }
-        });
+        EventQueue.invokeLater(() -> new WatermarkApp());
     }
 }
