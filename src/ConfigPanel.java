@@ -10,7 +10,7 @@ public class ConfigPanel extends JFrame {
     private Properties config;
     private JComboBox<String> fontNameBox, fontSizeBox, fontStyleBox;
     private JComboBox<Color> colorBox;
-    private JButton saveButton;
+    private JButton saveButton, closeButton;
     private JPanel fontPanel, controlPanel;
     private Color[] commonColors = {
             Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA,
@@ -54,12 +54,52 @@ public class ConfigPanel extends JFrame {
         controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         saveButton = new JButton("Save");
         saveButton.addActionListener(this::saveConfig);
+        closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> this.dispose());
         controlPanel.add(saveButton);
+        controlPanel.add(closeButton);
 
         add(fontPanel, BorderLayout.NORTH);
         add(controlPanel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    private void loadConfig() {
+        try (FileInputStream in = new FileInputStream("marca.cfg")) {
+            config.load(in);
+            updateUIFromConfig();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar configurações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void updateUIFromConfig() {
+        fontNameBox.setSelectedItem(config.getProperty("font.name", "Arial"));
+        fontSizeBox.setSelectedItem(config.getProperty("font.size", "12"));
+        fontStyleBox.setSelectedItem(config.getProperty("font.style", "Bold"));
+        Color selectedColor = new Color(
+                Integer.parseInt(config.getProperty("color.red", "0")),
+                Integer.parseInt(config.getProperty("color.green", "0")),
+                Integer.parseInt(config.getProperty("color.blue", "0"))
+        );
+        colorBox.setSelectedItem(selectedColor);
+    }
+
+    private void saveConfig(ActionEvent event) {
+        config.setProperty("font.name", (String) fontNameBox.getSelectedItem());
+        config.setProperty("font.size", fontSizeBox.getEditor().getItem().toString());
+        config.setProperty("font.style", (String) fontStyleBox.getSelectedItem());
+        Color selectedColor = (Color) colorBox.getSelectedItem();
+        config.setProperty("color.red", String.valueOf(selectedColor.getRed()));
+        config.setProperty("color.green", String.valueOf(selectedColor.getGreen()));
+        config.setProperty("color.blue", String.valueOf(selectedColor.getBlue()));
+        try (FileOutputStream out = new FileOutputStream("marca.cfg")) {
+            config.store(out, "Watermark Configuration");
+            JOptionPane.showMessageDialog(this, "Configurações salvas com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar configurações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     class ColorRenderer extends JPanel implements ListCellRenderer<Color>, ComboBoxEditor {
@@ -117,44 +157,6 @@ public class ConfigPanel extends JFrame {
         @Override
         public void selectAll() {
             // Não é necessário para esta demonstração
-        }
-    }
-
-
-    private void loadConfig() {
-        try (FileInputStream in = new FileInputStream("marca.cfg")) {
-            config.load(in);
-            updateUIFromConfig();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar configurações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void updateUIFromConfig() {
-        fontNameBox.setSelectedItem(config.getProperty("font.name", "Arial"));
-        fontSizeBox.setSelectedItem(config.getProperty("font.size", "12"));
-        fontStyleBox.setSelectedItem(config.getProperty("font.style", "Bold"));
-        Color selectedColor = new Color(
-                Integer.parseInt(config.getProperty("color.red", "0")),
-                Integer.parseInt(config.getProperty("color.green", "0")),
-                Integer.parseInt(config.getProperty("color.blue", "0"))
-        );
-        colorBox.setSelectedItem(selectedColor);
-    }
-
-    private void saveConfig(ActionEvent event) {
-        config.setProperty("font.name", (String) fontNameBox.getSelectedItem());
-        config.setProperty("font.size", fontSizeBox.getEditor().getItem().toString());
-        config.setProperty("font.style", (String) fontStyleBox.getSelectedItem());
-        Color selectedColor = (Color) colorBox.getSelectedItem();
-        config.setProperty("color.red", String.valueOf(selectedColor.getRed()));
-        config.setProperty("color.green", String.valueOf(selectedColor.getGreen()));
-        config.setProperty("color.blue", String.valueOf(selectedColor.getBlue()));
-        try (FileOutputStream out = new FileOutputStream("marca.cfg")) {
-            config.store(out, "Watermark Configuration");
-            JOptionPane.showMessageDialog(this, "Configurações salvas com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar configurações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
