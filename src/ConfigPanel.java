@@ -19,6 +19,7 @@ public class ConfigPanel extends JFrame {
         initializeUI();
         loadConfig();
         pack();
+        setLocationRelativeTo(null);  // Certifique-se de que está depois de pack()
         setVisible(true);
     }
 
