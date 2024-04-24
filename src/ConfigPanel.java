@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class ConfigPanel extends JFrame {
     private Properties config;
-    private JComboBox<String> fontNameBox, fontSizeBox, fontStyleBox;
+    private JComboBox<String> fontNameBox, fontSizeBox, fontStyleBox, displayModeBox;
     private JComboBox<Color> colorBox;
     private JCheckBox showIPCheckBox, showTimeCheckBox, showDateCheckBox, agentNameCheckBox, domainCheckBox, companyCheckBox;
     private JButton saveButton, closeButton;
@@ -19,14 +19,13 @@ public class ConfigPanel extends JFrame {
         initializeUI();
         loadConfig();
         pack();
-        setLocationRelativeTo(null);  // Certifique-se de que está depois de pack()
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void initializeUI() {
         setTitle("Configurações da Marca d'Água");
         setLayout(new BorderLayout());
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setIconImage(new ImageIcon("ico.png").getImage());
 
@@ -50,6 +49,12 @@ public class ConfigPanel extends JFrame {
         colorBox.setRenderer(new ColorRenderer());
         fontPanel.add(new JLabel("Cor:"));
         fontPanel.add(colorBox);
+
+        // Configuração do menu dropdown "Exibir"
+        String[] displayOptions = {"Horizontal", "Diagonal"};
+        displayModeBox = new JComboBox<>(displayOptions);
+        fontPanel.add(new JLabel("Exibir:"));
+        fontPanel.add(displayModeBox);
 
         showIPCheckBox = new JCheckBox("Mostrar IP");
         showTimeCheckBox = new JCheckBox("Mostrar Hora");
@@ -99,12 +104,13 @@ public class ConfigPanel extends JFrame {
                 Integer.parseInt(config.getProperty("color.blue", "0"))
         );
         colorBox.setSelectedItem(selectedColor);
-        showIPCheckBox.setSelected(config.getProperty("address", "1").equals("1"));
-        showTimeCheckBox.setSelected(config.getProperty("time", "0").equals("1"));
-        showDateCheckBox.setSelected(config.getProperty("date", "0").equals("1"));
-        agentNameCheckBox.setSelected(config.getProperty("agent.name", "0").equals("1"));
-        domainCheckBox.setSelected(config.getProperty("domain", "0").equals("1"));
-        companyCheckBox.setSelected(config.getProperty("company", "0").equals("1"));
+        showIPCheckBox.setSelected("1".equals(config.getProperty("address", "0")));
+        showTimeCheckBox.setSelected("1".equals(config.getProperty("time", "0")));
+        showDateCheckBox.setSelected("1".equals(config.getProperty("date", "0")));
+        agentNameCheckBox.setSelected("1".equals(config.getProperty("agent.name", "0")));
+        domainCheckBox.setSelected("1".equals(config.getProperty("domain", "0")));
+        companyCheckBox.setSelected("1".equals(config.getProperty("company", "0")));
+        displayModeBox.setSelectedIndex("1".equals(config.getProperty("horizontal", "0")) ? 0 : 1);
     }
 
     private void saveConfig(ActionEvent event) {
@@ -121,6 +127,7 @@ public class ConfigPanel extends JFrame {
         config.setProperty("agent.name", agentNameCheckBox.isSelected() ? "1" : "0");
         config.setProperty("domain", domainCheckBox.isSelected() ? "1" : "0");
         config.setProperty("company", companyCheckBox.isSelected() ? "1" : "0");
+        config.setProperty("horizontal", displayModeBox.getSelectedIndex() == 0 ? "1" : "0");
 
         try (FileOutputStream out = new FileOutputStream("marca.cfg")) {
             config.store(out, "Watermark Configuration");
@@ -165,7 +172,6 @@ public class ConfigPanel extends JFrame {
                 label.setBackground(color);
             }
         }
-
         @Override
         public Object getItem() {
             return color;
@@ -192,3 +198,5 @@ public class ConfigPanel extends JFrame {
         }
     }
 }
+
+
