@@ -1,40 +1,40 @@
 # WatermarkApp
 
-## Visão Geral
-WatermarkApp é uma aplicação Java que aplica uma marca d'água personalizável e transparente em seu ambiente de desktop. Esta aplicação utiliza JNA (Java Native Access) para integrar-se com sistemas Windows e exibir marcas d'água sobre todas as outras janelas. Inclui opções de configuração para texto da marca d'água, fonte, cor e transparência, baseadas em informações do sistema como nome do usuário, endereço IP, data e hora.
+## Descrição
+O WatermarkApp é uma aplicação Java que exibe uma marca d'água sobre toda a tela do computador. Esta marca d'água pode incluir informações como IP do usuário, data e hora, e pode ser configurada para ser exibida horizontalmente ou diagonalmente. É útil para aumentar a segurança e a rastreabilidade de informações em ambientes controlados.
 
 ## Funcionalidades
-- Exibe uma marca d'água personalizável em toda a tela.
-- Configuração através do arquivo `marca.cfg` para configurações personalizadas, incluindo fonte, cor, tamanho e transparência.
-- Opções para incluir o endereço IP do sistema, hora e data na marca d'água.
-- Integração perfeita com o sistema operacional Windows usando JNA para manipulação de janelas.
+- Exibição de marca d'água em toda a tela.
+- Configuração personalizada da fonte, tamanho, estilo e cor da marca d'água.
+- Possibilidade de incluir o endereço IP, data e hora na marca d'água.
+- Opções para exibir a marca d'água horizontalmente ou diagonalmente.
+- Configuração através de uma interface gráfica amigável.
 
-## Instalação
-Para executar o WatermarkApp, certifique-se de ter o Java instalado em sua máquina. Baixe os arquivos da aplicação para o seu sistema local.
+## Como Instalar
+Para instalar o WatermarkApp, siga estes passos:
+1. Clone o repositório ou baixe os arquivos do projeto.
+2. Compile o código usando um JDK compatível (Java 8 ou superior recomendado).
+3. Execute o arquivo `WatermarkApp.java` para iniciar a aplicação.
 
-### Pré-requisitos
-- Java JDK 11 ou superior
-- Biblioteca JNA (incluída no diretório lib)
+## Como Usar
+Após iniciar a aplicação, a marca d'água será exibida automaticamente com as configurações padrão. Para alterar as configurações:
+1. Abra o `ConfigPanel` executando `ConfigPanel.java`.
+2. Ajuste as configurações de fonte, cor, texto e opções de exibição conforme necessário.
+3. Clique em "Aplicar" para salvar as configurações e atualizar a visualização da marca d'água.
+4. Feche o painel para retornar ao uso normal do computador com a nova configuração de marca d'água ativa.
 
-## Configuração
-Edite o arquivo `marca.cfg` para personalizar as configurações da aplicação:
-- `font.name`: Nome da fonte (ex.: Arial, Times New Roman)
-- `font.style`: Estilo da fonte (ex.: Bold, Plain)
-- `font.size`: Tamanho da fonte em pixels
-- `color.red`, `color.green`, `color.blue`: Configurações de cor RGB
-- `color.alpha`: Transparência da marca d'água (0-100)
-- `address`: Defina como "1" para exibir o endereço IP
-- `time`: Defina como "1" para exibir a hora atual
-- `date`: Defina como "1" para exibir a data atual
-
-## Uso
-Para iniciar a aplicação, execute:
-```bash
-java -jar WatermarkApp.jar
-```
+## Requisitos
+- Java Runtime Environment (JRE) 8 ou superior.
+- Acesso aos recursos gráficos do sistema operacional.
 
 ## Contribuições
-Contribuições para o WatermarkApp são bem-vindas. Por favor, assegure-se de seguir os padrões de codificação e enviar solicitações de pull para quaisquer novas funcionalidades ou correções de bugs.
+Contribuições para o projeto são bem-vindas. Para contribuir, por favor, faça um fork do repositório, faça suas alterações e envie um pull request para revisão.
 
 ## Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
+Este projeto é licenciado sob a Licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## Suporte
+Para suporte, por favor, abra uma issue no repositório do GitHub ou entre em contato com o desenvolvedor.
+
+## Autor
+Desenvolvido por Rodrigo Prestes Menezes.
