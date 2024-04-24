@@ -2,11 +2,12 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
-import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import javax.swing.*;
 
 public class WatermarkApp {
 
@@ -80,15 +81,17 @@ public class WatermarkApp {
         String userInfo;
         Font font;
         Color color;
+        Properties config;
 
         public WatermarkPanel(String userInfo, Properties config) {
             this.userInfo = userInfo;
+            this.config = config;
             setOpaque(false);
             setLayout(new BorderLayout());
-            initConfig(config);
+            initConfig();
         }
 
-        private void initConfig(Properties config) {
+        private void initConfig() {
             String fontName = config.getProperty("font.name", "Arial");
             int fontStyle = config.getProperty("font.style", "Bold").equalsIgnoreCase("Bold") ? Font.BOLD : Font.PLAIN;
             int fontSize = Integer.parseInt(config.getProperty("font.size", "40"));
@@ -105,7 +108,7 @@ public class WatermarkApp {
         }
 
         @Override
-           protected void paintComponent(Graphics g) {
+        protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -113,14 +116,32 @@ public class WatermarkApp {
             g2d.setColor(color);
 
             FontMetrics fm = g2d.getFontMetrics();
-            int x = 50;
-            while (x < getWidth()) {
-                int y = 50;
-                while (y < getHeight()) {
-                    g2d.drawString(userInfo, x, y);
-                    y += fm.getHeight() + 50;
+            int textWidth = fm.stringWidth(userInfo);
+            int textHeight = fm.getHeight();
+
+            boolean isHorizontal = "1".equals(config.getProperty("horizontal", "0"));
+
+            if (isHorizontal) {
+                // Diminuir o espaço horizontal entre as repetições de texto
+                for (int y = textHeight; y < getHeight(); y += textHeight + 30) {  // Espaço vertical ajustado
+                    for (int x = 0; x < getWidth(); x += textWidth + 20) {  // Espaço horizontal ajustado
+                        g2d.drawString(userInfo, x, y);
+                    }
                 }
-                x += fm.stringWidth(userInfo) + 50;
+            } else {
+                AffineTransform transform = new AffineTransform();
+                transform.rotate(-Math.PI / 4); // Diagonal
+                g2d.setTransform(transform);
+
+                int diagonalLength = (int) Math.sqrt(getWidth() * getWidth() + getHeight() * getHeight());
+                int startX = -diagonalLength / 2;
+
+                // Diminuir o espaço diagonal entre as repetições de texto
+                for (int x = startX; x < diagonalLength; x += textWidth + 20) {  // Espaço horizontal ajustado
+                    for (int y = -getHeight(); y < getHeight() * 2; y += textHeight + 30) {  // Espaço vertical ajustado
+                        g2d.drawString(userInfo, x, y);
+                    }
+                }
             }
             g2d.dispose();
         }
@@ -128,6 +149,6 @@ public class WatermarkApp {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new WatermarkApp());
+        EventQueue.invokeLater(WatermarkApp::new);
     }
 }
