@@ -27,7 +27,7 @@ public class WatermarkApp {
     private void loadConfig() {
         config = new Properties();
         try {
-            config.load(new FileInputStream("marca.cfg"));
+            config.load(new FileInputStream("marca.prm"));
         } catch (IOException e) {
             System.err.println("Unable to load config file.");
             e.printStackTrace();

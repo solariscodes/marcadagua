@@ -50,10 +50,10 @@ public class ConfigPanel extends JFrame {
         fontPanel.add(new JLabel("Cor:"));
         fontPanel.add(colorBox);
 
-        // Configuração do menu dropdown "Exibir"
+        // Configuração do menu dropdown "Orientação"
         String[] displayOptions = {"Horizontal", "Diagonal"};
         displayModeBox = new JComboBox<>(displayOptions);
-        fontPanel.add(new JLabel("Exibir:"));
+        fontPanel.add(new JLabel("Orientação:"));
         fontPanel.add(displayModeBox);
 
         showIPCheckBox = new JCheckBox("Mostrar IP");
@@ -86,7 +86,7 @@ public class ConfigPanel extends JFrame {
     }
 
     private void loadConfig() {
-        try (FileInputStream in = new FileInputStream("marca.cfg")) {
+        try (FileInputStream in = new FileInputStream("marca.prm")) {
             config.load(in);
             updateUIFromConfig();
         } catch (IOException e) {
@@ -129,7 +129,7 @@ public class ConfigPanel extends JFrame {
         config.setProperty("company", companyCheckBox.isSelected() ? "1" : "0");
         config.setProperty("horizontal", displayModeBox.getSelectedIndex() == 0 ? "1" : "0");
 
-        try (FileOutputStream out = new FileOutputStream("marca.cfg")) {
+        try (FileOutputStream out = new FileOutputStream("marca.prm")) {
             config.store(out, "Watermark Configuration");
             JOptionPane.showMessageDialog(this, "Configurações salvas com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {

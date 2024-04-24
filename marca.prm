@@ -1,5 +1,5 @@
 #Watermark Configuration
-#Wed Apr 24 15:24:47 BRT 2024
+#Wed Apr 24 15:42:00 BRT 2024
 address=0
 agent.name=0
 color.alpha=15
@@ -9,7 +9,7 @@ color.red=0
 company=0
 date=1
 domain=0
-font.name=Maiandra GD
+font.name=Lucida Sans
 font.size=40
 font.style=Bold
 horizontal=1
